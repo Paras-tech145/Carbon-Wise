@@ -53,7 +53,8 @@ def clear_data():
 load_session_state()
 
 # Streamlit app code
-st.title("Carbon Wise - Carbon Footprint Calculator")
+st.title("👣Carbon Wise - Carbon Footprint Calculator")
+st.warning("Please clear only after completing 4 months and don't forget to Save your progress as PNG before clearing!")
 
 # Clear All Data Button
 if st.button("Clear All Data", on_click=clear_data):
@@ -68,41 +69,41 @@ if st.button("Show Progress"):
             'CO2 Emissions (tonnes)': st.session_state.results
         })
         df.set_index('Month', inplace=True)
-        st.line_chart(df)
+        st.bar_chart(df)
     else:
         st.info("No data available. Please calculate your CO2 emissions first.")
 
 # User inputs
-st.subheader("Your Country")
+st.subheader("🌍Your Country")
 country = st.selectbox("Select", ["India"])
 
 col1, col2 = st.columns(2)
 with col1:
-    st.subheader("Daily commute distance by Public transportation (in km)")
+    st.subheader("🚌Daily commute distance by Public transportation (in km)")
     pubdistance = st.number_input("Distance by public Transport", 0.0, key="pubdistance_input")
-    st.subheader("Monthly electricity consumption (in kWh)")
-    electricity = st.number_input("Electricity", 0.0, key="electricity_input")
-    st.subheader("Annual travel by airplane (in hours)")
+    st.subheader("✈️Annual travel by airplane (in hours)")
     plane = st.number_input("Flight", 0, key="plane_input")
-    st.subheader("Weekly commute distance by Self Car (Fill this if it is CNG)(in km)")
-    carcng = st.number_input("CNG Car", 0, key="cng_input")
-    st.subheader("Weekly commute distance by Self Car (Fill this if it is Electric)(in km)")
-    carelectric = st.number_input("Electric Car", 0, key="electric_input")
-    st.subheader("️ Weekly commute distance by Self Bike (Fill this if it is Diesel)(in km)")
-    bikediesel = st.number_input("Diesel Bike", 0, key="bdiesel_input")
+    st.subheader("🚗Weekly commute distance by Self Car (Fill this if it is CNG)(in km)")
+    carcng = st.number_input("CNG Car", 0.0, key="cng_input")
+    st.subheader("🚗Weekly commute distance by Self Car (Fill this if it is Electric)(in km)")
+    carelectric = st.number_input("Electric Car", 0.0, key="electric_input")
+    st.subheader("🚗Weekly commute distance by Self Car (Fill this if it is Petrol)(in km)")
+    carpetrol = st.number_input("Petrol Car", 0.0, key="petrol_input")
 with col2:
-    st.subheader("️Waste generated per week (in kg)")
+    st.subheader("🚗Weekly commute distance by Self Car (Fill this if it is Diesel)(in km)")
+    cardiesel = st.number_input("Diesel Car", 0.0, key="diesel_input")
+    st.subheader("️🏍️Weekly commute distance by Self Bike (Fill this if it is Diesel)(in km)")
+    bikediesel = st.number_input("Diesel Bike", 0.0, key="bdiesel_input")
+    st.subheader("️🏍️Weekly commute distance by Self Bike (Fill this if it is Petrol)(in km)")
+    bikepetrol = st.number_input("Petrol Bike", 0.0, key="bpetrol_input")
+    st.subheader("️🏍️Weekly commute distance by Self Bike (Fill this if it is Electric)(in km)")
+    bikeelectric = st.number_input("Electric Bike", 0.0, key="belectric_input")
+    st.subheader("⚡Monthly electricity consumption (in kWh)")
+    electricity = st.number_input("Electricity", 0.0, key="electricity_input")
+    st.subheader("️🗑️Waste generated per week (in kg)")
     waste = st.number_input("Waste", 0.0, key="waste_input")
-    st.subheader("️Number of meals per day")
+    st.subheader("️🍽️Number of meals per day")
     meals = st.number_input("Meals", 0, key="meals_input")
-    st.subheader("Weekly commute distance by Self Car (Fill this if it is Petrol)(in km)")
-    carpetrol = st.number_input("Petrol Car", 0, key="petrol_input")
-    st.subheader("Weekly commute distance by Self Car (Fill this if it is Diesel)(in km)")
-    cardiesel = st.number_input("Diesel Car", 0, key="diesel_input")
-    st.subheader("️Weekly commute distance by Self Bike (Fill this if it is Petrol)(in km)")
-    bikepetrol = st.number_input("Petrol Bike", 0, key="bpetrol_input")
-    st.subheader("️Weekly commute distance by Self Bike (Fill this if it is Electric)(in km)")
-    bikeelectric = st.number_input("Electric Bike", 0, key="belectric_input")
 
 # Normalize inputs
 if pubdistance > 0:
@@ -173,6 +174,11 @@ bike_emissions = round(
     petrolbike_emissions + dieselbike_emissions + electricbike_emissions, 2
 )
 
+# Calculate total annual emissions
+year_emissions = total_emissions * 12
+
+
+
 if 'show_results' not in st.session_state:
     st.session_state.show_results = False
 
@@ -197,19 +203,21 @@ if st.session_state.show_results:
     col3, col4 = st.columns(2)
     with col3:
         st.subheader("Carbon Emissions by Category")
-        st.info(f"Public Transportation: {pubtransportation_emissions} tonnes CO2 per month")
-        st.info(f"Electricity: {electricity_emissions} tonnes CO2 per month")
-        st.info(f"️Diet: {diet_emissions} tonnes CO2 per month")
-        st.info(f"Waste: {waste_emissions} tonnes CO2 per month")
-        st.info(f"Flight: {plane_emissions} tonnes CO2 per month")
-        st.info(f"Personal Car: {car_emissions} tonnes CO2 per month")
-        st.info(f"Personal Bike: {bike_emissions} tonnes CO2 per month")
+        st.info(f"⚡Electricity: {electricity_emissions} tonnes CO2 per month")
+        st.info(f"️🍽️Diet: {diet_emissions} tonnes CO2 per month")
+        st.info(f"🗑️Waste: {waste_emissions} tonnes CO2 per month")
+        st.info(f"🚌Public Transportation: {pubtransportation_emissions} tonnes CO2 per month")
+        st.info(f"✈️Flight: {plane_emissions} tonnes CO2 per month")
+        st.info(f"🚗Personal Car: {car_emissions} tonnes CO2 per month")
+        st.info(f"🏍️Personal Bike: {bike_emissions} tonnes CO2 per month")
 
     with col4:
         st.subheader("Total Carbon Footprint")
-        st.success(f" Your total carbon footprint is: {total_emissions} tonnes CO2 per month")
-        st.warning("In 2021, CO2 emissions per capita for India was 1.9 tons of CO2 per capita. Between 1972 and 2021, CO2 emissions per capita of India grew substantially from 0.39 to 1.9 tons of CO2 per capita rising at an increasing annual rate that reached a maximum of 9.41% in 2021.")
-
+        st.success(f"Your total carbon footprint is: {total_emissions} tonnes CO2 per month and {year_emissions} tonnes CO2 per year.")
+        st.success(f"India's per capita emissions remain relatively low at around 1.8 tons CO2 per person.")
+        st.success(f"The global average CO2 emissions per capita is approximately 4.86 tonnes per year.")
+        st.warning("As of the latest data, India's annual CO2 emissions are approximately 2.9 gigatons of CO2 equivalent (GtCO2e). This makes India the third-largest emitter globally, following the United States and China.")
+        st.warning("The universal goal, as outlined in the Paris Agreement, is to limit global warming to well below 2°C above pre-industrial levels, with efforts to limit it to 1.5°C. To achieve this, global greenhouse gas emissions need to peak before 2025 and decline by 43% by 2030.")
         # Show Get Tips button after calculating emissions
         st.button("Get Tips", on_click=show_tips)
 
@@ -217,8 +225,8 @@ if st.session_state.show_tips:
     st.header("Tips")
     col5, col6 = st.columns(2)
     with col5:
-        if electricity_emissions > 1.0:
-            st.subheader("Tips for reducing Electricity Emissions")
+        if electricity_emissions > 0.2:
+            st.subheader("⚡Tips for reducing Electricity Emissions⚡")
             st.info(f"Use LED bulbs instead of incandescent or CFL bulbs (saves up to 75% energy).")
             st.info(f"Unplug devices when not in use or use smart power strips to prevent phantom energy usage.")
             st.info(f"Opt for a green energy plan from your electricity provider if available, which uses wind, solar, or hydropower.")
@@ -226,8 +234,8 @@ if st.session_state.show_tips:
             st.info(f"Power down computers and devices when not in use or put them in energy-saving mode.")
             st.info(f"Reduce screen brightness on monitors and TVs, as brighter settings consume more power.")
             st.info(f"Use natural sunlight during the day instead of electric lighting, by keeping windows open.")
-        if waste_emissions > 0.5:
-            st.subheader("Tips for reducing Waste Emissions")
+        if waste_emissions > 0.03:
+            st.subheader("🗑️Tips for reducing Waste Emissions🗑️")
             st.info(f"Minimize food waste by planning meals and using leftovers.")
             st.info(f"Participate in local recycling programs and ensure you follow proper sorting guidelines.")
             st.info(f"Use reusable bags, bottles, and containers instead of disposable ones.")
@@ -235,15 +243,15 @@ if st.session_state.show_tips:
             st.info(f"Repurpose items instead of discarding them (e.g., upcycling old clothes or furniture).")
             st.info(f"Donate usable items (e.g., clothes, electronics, furniture) to reduce overall waste generation.")
     with col6:
-        if car_emissions > 1.0:
-            st.subheader("Tips for reducing Emissions from Cars")
+        if car_emissions > 0.4:
+            st.subheader("🚗Tips for reducing Emissions from Cars🚗")
             st.info(f"Sharing your car with others significantly reduces emissions per person. Consider carpooling for daily commutes or trips.")
             st.info(f"Hybrid cars use both fuel and electricity, cutting emissions. Electric vehicles (EVs), especially when powered by renewable energy, can reduce emissions to near zero.")
             st.info(f"Practice eco-driving: avoid sudden acceleration, maintain a steady speed, and minimize idling. This can improve fuel efficiency by up to 30%, cutting down on emissions.")
             st.info(f"Combine errands into a single trip, use public transport where possible, or walk/bike short distances. Fewer trips mean less fuel consumption.")
             st.info(f"Regularly service your car (e.g., tune-ups, oil changes, and tire pressure checks) to ensure it runs efficiently, reducing fuel consumption and emissions.")
-        if bike_emissions > 1.0:
-            st.subheader("Tips for reducing Emissions from Bikes")
+        if bike_emissions > 0.01:
+            st.subheader("🏍️Tips for reducing Emissions from Bikes🏍️")
             st.info(f"Opt for buses, trains, or cycling for shorter journeys, and use your motorbike for longer distances or areas with poor public transport.")
             st.info(f"Consider switching to an electric motorbike (e-bike) to significantly lower emissions, especially if you charge it using renewable energy.")
             st.info(f"Plan your routes to avoid heavy traffic and minimize stop-start driving. Taking more direct routes will save fuel and lower emissions.")
